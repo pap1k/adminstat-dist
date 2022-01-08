@@ -1,5 +1,9 @@
-import requests, antiddos, adminparser as parser, datetime, sys, os
+import requests, antiddos, datetime, sys, os, subprocess
+from adminparser import Parser
+from sets import SETS
 from admins import Admin, AdminDaemon as AD
+
+__version = 0.3
 
 def sortAdmins(admin):
     return admin.get_all()
@@ -20,13 +24,27 @@ def printDetailAdmin(admin : Admin):
         print(f"  [{category}] : {admin.bans[category]}")
     print(f"Разбанов (лично админ разбанил):", admin.unbans)
 
-############
-SERVER = "rpg"
+##########################
+# CHECKING UPDATES
+##########################
+update_info = requests.get(SETS['update_url']).json()
+if float(update_info["v"]) > __version:
+    print("==========!!!!!!!!!!!!!!==========")
+    print(f"Доступно обновление!\nТекущая версия: {__version}\nНовая версия: {update_info['v']}.\nНововведения:")
+    print(update_info["comment"])
+    answ = input("\nОбновить сейчас? (y/n): ")
+    if answ.lower() in ["y", "д"]:
+        subprocess.Popen(["updater.exe", update_info["url"], __file__], close_fds=True)
+        exit(0)
+
+##########################
+# GETTING ARGS
+##########################
+SERVER = SETS['server']
 servers = {"rpg" : "rpg", "rp1" : "rp", "rp2": "rp2"}
-
 mon = datetime.datetime.today().strftime("%m")
+parse_n = SETS['parse']
 
-parse_n = 1000
 if "-s" in sys.argv:
     SERVER = sys.argv[sys.argv.index("-s")+1]
 if SERVER not in servers:
@@ -38,9 +56,9 @@ if "-m" in sys.argv:
     mon = sys.argv[sys.argv.index("-m")+1]
 if "-n" in sys.argv:
     parse_n = int(sys.argv[sys.argv.index("-n")+1])
-############
+
 print("server: ", SERVER, ", mounth: ", mon, ", parse_n: ", parse_n)
-print("Starting...")
+print("Получение и обработка информации...")
 
 S = requests.Session()
 
@@ -59,7 +77,7 @@ S.cookies.set(**cookies)
 
 data = S.get(f"https://gta-trinity.ru/{SERVER}mon/bans.php").text
 
-P = parser.Parser(data)
+P = Parser(data)
 P.parse(parse_n)
 
 daemon = AD()
@@ -72,7 +90,9 @@ for string in P.parsed_data:
         tocount += 1
     else:
         skipped += 1
+
 daemon.admins.sort(key = sortAdmins, reverse=True)
+
 exitflag = True
 while exitflag:
     printStat(daemon)
@@ -84,11 +104,9 @@ while exitflag:
         num = int(inp)
         if daemon.admins[num-1]:
             printDetailAdmin(daemon.admins[num-1])
-            input()
         else:
-            print("Админа под таким номером не найдено")
-            input()
+            print("Ошибка: Админа под таким номером не найдено")
     else:
-        print("Команда не распознана")
-        input()
+        print("Ошибка: Команда не распознана")
+    input()
     os.system("cls")
