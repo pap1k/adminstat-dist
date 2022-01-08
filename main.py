@@ -103,6 +103,7 @@ while exitflag:
     elif inp.isdigit():
         num = int(inp)
         if daemon.admins[num-1]:
+            os.system("cls")
             printDetailAdmin(daemon.admins[num-1])
         else:
             print("Ошибка: Админа под таким номером не найдено")
