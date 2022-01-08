@@ -96,8 +96,8 @@ daemon.admins.sort(key = sortAdmins, reverse=True)
 exitflag = True
 while exitflag:
     printStat(daemon)
-    inp = input("\nВведите порядковый номер админа для подробной инфы, 'e' для выхода:\n")
-    if inp == 'e':
+    inp = input("\nВведите порядковый номер админа для подробной инфы, 'q' для выхода:\n")
+    if inp == 'q':
         exitflag = False
         continue
     elif inp.isdigit():
