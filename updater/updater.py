@@ -1,4 +1,4 @@
-import requests, sys, os, subprocess
+import requests, sys, os
 
 url = sys.argv[1]
 mainfile = sys.argv[2]
@@ -10,5 +10,4 @@ file = open(mainfile, "wb")
 file.write(latest.content)
 file.close()
 
-subprocess.Popen([mainfile], close_fds=True)
-exit(0)
+input("Успешное обновление. Можете запускать прогу")
