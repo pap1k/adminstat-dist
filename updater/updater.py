@@ -1,11 +1,12 @@
 import requests, sys, os, subprocess
 
-url = sys.argv[0]
-mainfile = sys.argv[1]
+url = sys.argv[1]
+mainfile = sys.argv[2]
 latest = requests.get(url)
 
-os.remove(mainfile)
-file = open(mainfile, "rb")
+if os.path.isfile(mainfile):
+    os.remove(mainfile)
+file = open(mainfile, "wb")
 file.write(latest.content)
 file.close()
 
