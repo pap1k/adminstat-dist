@@ -10,9 +10,12 @@ def sortAdmins(admin):
 
 def printStat(daemon):
     i = 1
+    total = 0
     for admin in daemon.admins:
         print(f"[{i}] " + admin.nick+": ", admin.get_all())
+        total += admin.get_all()
         i += 1
+    print(f"===================\nВсего наказаний: {total}")
 
 def printDetailAdmin(admin : Admin):
     print(f"Администратор [{admin.nick}]")
