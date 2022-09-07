@@ -3,7 +3,7 @@ from adminparser import Parser
 from sets import SETS
 from admins import Admin, AdminDaemon as AD
 
-__version = 0.3
+__version = 0.41
 
 def sortAdmins(admin):
     return admin.get_all()
