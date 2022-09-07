@@ -1,1 +1,5 @@
-{"v": "0.3", "comment": "Добавил систему автообновления", "url": "https://github.com/pap1k/adminstat-dist/releases/download/v0.3/adminstat.exe"}
+{
+  "v": "0.4",
+  "comment": "Обновил баг с .com",
+  "url": "https://github.com/pap1k/adminstat-dist/releases/download/v0.4/adminstat.exe"
+}

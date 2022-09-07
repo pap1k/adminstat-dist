@@ -65,20 +65,20 @@ print("Получение и обработка информации...")
 
 S = requests.Session()
 
-resp = S.get("https://gta-trinity.ru/")
+resp = S.get("https://gta-trinity.com/")
 code = antiddos.get(resp.text)
 
 cookies = dict(
     name='REACTLABSPROTECTION',
     value=code,
     path='/',
-    domain='gta-trinity.ru',
+    domain='gta-trinity.com',
     expires=2145916555,
     rest = {'hostOnly':True}
 )
 S.cookies.set(**cookies)
 
-data = S.get(f"https://gta-trinity.ru/{SERVER}mon/bans.php").text
+data = S.get(f"https://gta-trinity.com/{SERVER}mon/bans.php").text
 
 P = Parser(data)
 P.parse(parse_n)
