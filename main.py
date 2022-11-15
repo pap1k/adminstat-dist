@@ -25,7 +25,7 @@ def printDetailAdmin(admin : Admin):
     print(f"Баны по категориям")
     for category in admin.bans:
         print(f"  [{category}] : {admin.bans[category]}")
-    print(f"Разбанов (лично админ разбанил):", admin.unbans)
+    print(f"[не работает]Разбанов (лично админ разбанил):", admin.unbans)
 
 ##########################
 # CHECKING UPDATES
@@ -35,16 +35,13 @@ if float(update_info["v"]) > __version:
     print("==========!!!!!!!!!!!!!!==========")
     print(f"Доступно обновление!\nТекущая версия: {__version}\nНовая версия: {update_info['v']}.\nНововведения:")
     print(update_info["comment"])
-    answ = input("\nОбновить сейчас? (y/n): ")
-    if answ.lower() in ["y", "д"]:
-        subprocess.Popen(["updater.exe", update_info["url"], __file__], close_fds=True)
-        exit(0)
+    print("Чинить автоапдейт мне лень, скачайте новую версию отюда сами:", update_info['url'])
 
 ##########################
 # GETTING ARGS
 ##########################
 SERVER = SETS['server']
-servers = {"rpg" : "rpg", "rp1" : "rp", "rp2": "rp2"}
+servers = {"rpg" : "rpg", "rp1" : "1rp", "rp2": "2rp"}
 mon = datetime.datetime.today().strftime("%m")
 parse_n = SETS['parse']
 
@@ -78,10 +75,20 @@ cookies = dict(
 )
 S.cookies.set(**cookies)
 
-data = S.get(f"https://gta-trinity.com/{SERVER}mon/bans.php").text
+params = {
+    "draw":1,
+    "length": parse_n,
+    "server": 1,
+    "monitoring" : f"{SERVER}ban",
+    "order[0][dir]": "desc",
+    "columns[0][orderable]" : "true",
+    "start": 0
+}
+
+data = S.get(f"https://gta-trinity.com/forum/api/monitoring/", params=params).json()
 
 P = Parser(data)
-P.parse(parse_n)
+P.parse()
 
 daemon = AD()
 tocount = 0

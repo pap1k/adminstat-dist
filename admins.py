@@ -53,7 +53,7 @@ class AdminDaemon:
             admin_ref.add_warn()
         elif action == AT.TYPE_JAIL:
             admin_ref.add_jail()
-        elif action == AT.TYPE_UNABN:
+        elif action == AT.TYPE_UNBAN:
             admin_ref.add_unban()
         return admin_ref
 

@@ -16,11 +16,11 @@ class ParsedString:
         print(f"Parsed string\n--date: {self.date}\n--action: {self.action}\n--admin: {self.admin}\n--categoty: {self.category}\n--reason: {self.reason}\n\n")
 
 class Parser:
-    raw_data : str
+    raw_data : dict
     parsed_data : list = []
 
     def __init__(self, document) -> None:
-        self.raw_data = document.split("</span>\n<br>")[1]
+        self.raw_data = document
     
     def _show_raw(self):
         open("_output.txt", "w", encoding="utf-8").write(self.raw_data)
@@ -30,9 +30,10 @@ class Parser:
         for v in self.parsed_data:
             v.print()
 
-    def parse(self, count : int = 0):
-        subarray = self.raw_data.split("<br>") if count == 0 else self.raw_data.split("<br>")[0:count]
-        for string in subarray:
+    def parse(self):
+        subarray = self.raw_data['data']
+        for v in subarray:
+            string = v[1]
             if (not ("Комментарий" in string)) and (not ("превышено допустимое количество предупреждений" in string)) and (not ("разбанил") in string):
                 self.parsed_data.append(self.parse_string(string))
 
@@ -43,13 +44,17 @@ class Parser:
         if len(redate) == 3 :
             date = datetime.datetime(int(redate[2]), int(redate[1]), int(redate[0]))
         
-        action = re.findall(r"\] (\w): ", string)[0]
+        try:
+            action = re.findall(r"\] (\w+): ", string)[0]
+        except:
+            print("Не удалось спарсить эту строчку:")
+            print(string)
         act = AT.TYPE_UNKNOWN
 
         if action == "B":
             act = AT.TYPE_BAN
         elif action == "U":
-            act = AT.TYPE_UNABN
+            act = AT.TYPE_UNBAN
         elif action == "W":
             act = AT.TYPE_UNWARN if "снял" in string else AT.TYPE_WARN
         elif action == "J":
