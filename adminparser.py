@@ -66,7 +66,7 @@ class Parser:
         else:
             act = AT.TYPE_UNKNOWN
 
-        rename = re.findall(r"дминистрат\w+\b (\w+)\b[,\s]", string)
+        rename = re.findall(r"дминистрат\w+\b ([\w\d\.]+)[,\s]", string)
         aname = rename[0] if len(rename) > 0 else "ANON"
 
         category = None
